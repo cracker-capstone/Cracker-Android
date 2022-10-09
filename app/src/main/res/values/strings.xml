@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">CRACKER</string>
+    <string name="detect">DETECT</string>
+    <string name="no_permission_for_camera">카메라 접근 권한이 없습니다.</string>
+    <string name="need_permission_title">권한 동의 필요</string>
+    <string name="message_for_camera_permission">CRACKER 앱이 탐지를 위해 카메라 권한을 필요로 합니다.</string>
+    <string name="agree">동의</string>
+    <string name="disagree">비동의</string>
+    <string name="start_detection">Start Detection</string>
 </resources>
