@@ -3,6 +3,8 @@ package co.kr.cracker_android.presentation.view.detect
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import androidx.camera.core.CameraSelector
@@ -19,12 +21,39 @@ class DetectActivity : BaseActivity<ActivityDetectBinding>() {
     override val layoutRes: Int
         get() = R.layout.activity_detect
     private lateinit var locationManager: LocationManager
+    private var locationByGps: Location? = null
+    private var locationByNetwork: Location? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        initLocationSystem()
         startCamera()
         initOnClickListener()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun initLocationSystem() {
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        val gpsLocationListener = LocationListener { location -> locationByGps = location }
+        val networkLocationListener = LocationListener { location -> locationByNetwork = location }
+        if (isGpsEnabled) {
+            locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                1000,
+                10f,
+                gpsLocationListener
+            )
+        }
+        if (isNetworkEnabled) {
+            locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER,
+                1000,
+                10f,
+                networkLocationListener
+            )
+        }
     }
 
     private fun startCamera() {
@@ -60,10 +89,30 @@ class DetectActivity : BaseActivity<ActivityDetectBinding>() {
     // Already checked in MainActivity
     @SuppressLint("MissingPermission")
     private fun logCurrentLocation() {
-        val currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-        Timber.tag("location")
-            .i("위도: ${currentLocation?.latitude}, 경도: ${currentLocation?.longitude}")
+        locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            ?.let { locationByGps = it }
+        locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            ?.let { locationByNetwork = it }
+        var currentLocation: Location? = null
+        if (locationByGps != null && locationByNetwork != null) {
+            currentLocation =
+                if (requireNotNull(locationByGps).accuracy > requireNotNull(locationByNetwork).accuracy) {
+                    Timber.tag("currentLocation by").i("locationByGps, both Not Null")
+                    locationByGps
+                } else {
+                    Timber.tag("currentLocation by").i("locationByNetwork, both Not Null")
+                    locationByNetwork
+                }
+        } else if (locationByGps != null) {
+            Timber.tag("currentLocation by").i("locationByGps")
+            currentLocation = locationByGps
+        } else if (locationByNetwork != null) {
+            Timber.tag("currentLocation by").i("locationByNetwork")
+            currentLocation = locationByNetwork
+        }
+        currentLocation?.let {
+            Timber.tag("currentLocation is").i("위도: ${it.latitude}, 경도: ${it.longitude}")
+        } ?: Timber.tag("currentLocation is").i("null")
     }
 
     companion object {
