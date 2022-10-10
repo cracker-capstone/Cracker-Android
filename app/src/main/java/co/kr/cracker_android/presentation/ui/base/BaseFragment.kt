@@ -1,4 +1,4 @@
-package co.kr.cracker_android.presentation.view.base
+package co.kr.cracker_android.presentation.ui.base
 
 import android.content.Context
 import android.os.Bundle

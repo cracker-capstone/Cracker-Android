@@ -1,4 +1,4 @@
-package co.kr.cracker_android.presentation.view.detect
+package co.kr.cracker_android.presentation.ui.detect
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
 import co.kr.cracker_android.R
 import co.kr.cracker_android.databinding.ActivityDetectBinding
 import co.kr.cracker_android.presentation.util.shortToast
-import co.kr.cracker_android.presentation.view.base.BaseActivity
+import co.kr.cracker_android.presentation.ui.base.BaseActivity
 import timber.log.Timber
 
 class DetectActivity : BaseActivity<ActivityDetectBinding>() {

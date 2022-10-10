@@ -4,4 +4,9 @@
     <string name="start_detection">START DETECTION</string>
     <string name="request_permission">CRACKER 사용을 위해 권한을 모두 허용해주세요.</string>
     <string name="scheme_package">package</string>
+    <string name="history">HISTORY</string>
+    <string name="heatmap">HEATMAP</string>
+    <string name="histogram">HISTOGRAM</string>
+    <string name="cracker">CRACKER</string>
+    <string name="background_image">Background Image</string>
 </resources>

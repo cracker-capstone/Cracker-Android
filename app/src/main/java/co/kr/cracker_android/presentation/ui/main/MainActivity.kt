@@ -1,4 +1,4 @@
-package co.kr.cracker_android.presentation.view.main
+package co.kr.cracker_android.presentation.ui.main
 
 import android.Manifest
 import android.content.Intent
@@ -8,8 +8,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import co.kr.cracker_android.R
 import co.kr.cracker_android.databinding.ActivityMainBinding
 import co.kr.cracker_android.presentation.util.shortToast
-import co.kr.cracker_android.presentation.view.base.BaseActivity
-import co.kr.cracker_android.presentation.view.detect.DetectActivity
+import co.kr.cracker_android.presentation.ui.base.BaseActivity
+import co.kr.cracker_android.presentation.ui.detect.DetectActivity
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
     override val layoutRes: Int
