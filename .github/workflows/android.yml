@@ -2,8 +2,9 @@ name: Auto_Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - develop
+      - main
 
 jobs:
   build:
