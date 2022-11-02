@@ -80,7 +80,7 @@ class ImageSegmentationHelper(
         val imageProcessor =
             ImageProcessor.Builder()
                 .add(Rot90Op(-imageRotation / 90))
-                .add(ResizeOp(256, 256, ResizeOp.ResizeMethod.BILINEAR))
+                .add(ResizeOp(352, 288, ResizeOp.ResizeMethod.BILINEAR))
                 .build()
 
         val tensorImage = imageProcessor.process(TensorImage.fromBitmap(image))
