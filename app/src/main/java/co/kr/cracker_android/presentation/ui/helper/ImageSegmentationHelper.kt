@@ -80,7 +80,7 @@ class ImageSegmentationHelper(
         val imageProcessor =
             ImageProcessor.Builder()
                 .add(Rot90Op(-imageRotation / 90))
-                .add(ResizeOp(256, 256, ResizeOp.ResizeMethod.BILINEAR))
+                .add(ResizeOp(352, 288, ResizeOp.ResizeMethod.BILINEAR))
                 .build()
 
         val tensorImage = imageProcessor.process(TensorImage.fromBitmap(image))
@@ -109,7 +109,7 @@ class ImageSegmentationHelper(
         const val DELEGATE_CPU = 0
         const val DELEGATE_GPU = 1
         const val DELEGATE_NNAPI = 2
-        const val MODEL_DEEPLABV3 = "unet_tflite_quant_models_metadata.tflite"
+        const val MODEL_DEEPLABV3 = "unet_tflite_quant_qat_288384_models_metadata.tflite"
 
         private const val TAG = "Image Segmentation Helper"
     }
