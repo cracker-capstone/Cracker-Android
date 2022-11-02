@@ -173,12 +173,6 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
         }
     }
 
-    //    private fun initOnClickListener() {
-//        binding.btnStartDetect.setOnClickListener {
-//            logCurrentLocation()
-//        }
-//    }
-
     // Already checked in MainActivity
     @SuppressLint("MissingPermission")
     private fun logCurrentLocation() {
