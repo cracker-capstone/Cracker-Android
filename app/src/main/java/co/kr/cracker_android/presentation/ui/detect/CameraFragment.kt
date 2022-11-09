@@ -9,6 +9,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.SystemClock
+import android.view.Surface
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
@@ -76,7 +77,7 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        imageAnalyzer?.targetRotation = binding.viewFinder.display.rotation
+        imageAnalyzer?.targetRotation = Surface.ROTATION_90
     }
 
     private fun initImageSegmentationHelper() {
@@ -241,13 +242,13 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
         preview =
             Preview.Builder()
                 .setTargetAspectRatio(AspectRatio.RATIO_4_3)
-                .setTargetRotation(binding.viewFinder.display.rotation)
+                .setTargetRotation(Surface.ROTATION_90)
                 .build()
 
         imageAnalyzer =
             ImageAnalysis.Builder()
                 .setTargetAspectRatio(AspectRatio.RATIO_4_3)
-                .setTargetRotation(binding.viewFinder.display.rotation)
+                .setTargetRotation(Surface.ROTATION_90)
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
                 .build()
