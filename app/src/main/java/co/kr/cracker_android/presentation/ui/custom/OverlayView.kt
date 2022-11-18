@@ -70,6 +70,8 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
 
             scaleBitmap = Bitmap.createScaledBitmap(image, scaleWidth, scaleHeight, false)
             listener?.onLabels(colorLabels.filter { it.isExist })
+
+            val pixelRatio = pixels.count { it == -2139095040 } * 100 / pixels.size
         }
     }
 
