@@ -25,6 +25,7 @@
     <string name="tv_default_inference_time">0ms</string>
     <string name="tv_default_threads_value">2</string>
     <string name="btn_record">RECORD</string>
+    <string name="version">v0.0.9</string>
 
     <string-array name="delegate_spinner_titles">
         <item>CPU</item>
