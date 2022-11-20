@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import co.kr.cracker_android.presentation.util.CrackerLifecycleObserver
+import co.kr.cracker_android.util.CrackerLifecycleObserver
 import timber.log.Timber
 
-abstract class BaseFragment<T: ViewDataBinding>: Fragment() {
+abstract class BaseFragment<T : ViewDataBinding> : Fragment() {
     private var _binding: T? = null
     protected val binding get() = _binding ?: error("Binding Not Initialized")
     abstract val TAG: String

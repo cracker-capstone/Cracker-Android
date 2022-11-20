@@ -1,8 +1,9 @@
-package co.kr.cracker_android.presentation.ui.helper
+package co.kr.cracker_android.presentation.helper
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.SystemClock
+import co.kr.cracker_android.util.encode
 import org.tensorflow.lite.gpu.CompatibilityList
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
@@ -87,11 +88,14 @@ class ImageSegmentationHelper(
         val segmentResult = imageSegmenter?.segment(tensorImage)
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
 
+        val originalImage = tensorImage.bitmap.encode()
+
         imageSegmentationListener?.onResults(
             segmentResult,
             inferenceTime,
             tensorImage.height,
-            tensorImage.width
+            tensorImage.width,
+            originalImage
         )
     }
 
@@ -101,7 +105,8 @@ class ImageSegmentationHelper(
             results: List<Segmentation>?,
             inferenceTime: Long,
             imageHeight: Int,
-            imageWidth: Int
+            imageWidth: Int,
+            originalImage: String
         )
     }
 

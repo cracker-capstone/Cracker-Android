@@ -1,10 +1,10 @@
-package co.kr.cracker_android.presentation.util
+package co.kr.cracker_android.util
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import timber.log.Timber
 
-class CrackerLifecycleObserver: DefaultLifecycleObserver {
+class CrackerLifecycleObserver : DefaultLifecycleObserver {
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
         Timber.tag(owner::class.java.simpleName).i("onCreate")

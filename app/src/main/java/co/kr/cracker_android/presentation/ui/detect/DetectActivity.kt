@@ -6,7 +6,9 @@ import android.os.Build
 import co.kr.cracker_android.R
 import co.kr.cracker_android.databinding.ActivityDetectBinding
 import co.kr.cracker_android.presentation.ui.base.BaseActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DetectActivity : BaseActivity<ActivityDetectBinding>() {
     override val layoutRes: Int
         get() = R.layout.activity_detect
