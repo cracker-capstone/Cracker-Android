@@ -13,7 +13,7 @@ import androidx.navigation.Navigation
 import co.kr.cracker_android.R
 import co.kr.cracker_android.databinding.FragmentPermissionsBinding
 import co.kr.cracker_android.presentation.ui.base.BaseFragment
-import co.kr.cracker_android.presentation.util.shortToast
+import co.kr.cracker_android.util.shortToast
 
 class PermissionsFragment : BaseFragment<FragmentPermissionsBinding>() {
     override val TAG: String

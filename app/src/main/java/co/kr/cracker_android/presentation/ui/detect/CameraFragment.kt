@@ -15,14 +15,18 @@ import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation
 import co.kr.cracker_android.R
+import co.kr.cracker_android.data.preferences.CrackerSharedPreferences
 import co.kr.cracker_android.databinding.FragmentCameraBinding
+import co.kr.cracker_android.presentation.helper.ImageSegmentationHelper
 import co.kr.cracker_android.presentation.ui.base.BaseFragment
-import co.kr.cracker_android.presentation.ui.helper.ImageSegmentationHelper
+import co.kr.cracker_android.presentation.viewmodel.DetectViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -30,13 +34,20 @@ import org.tensorflow.lite.task.vision.segmenter.Segmentation
 import timber.log.Timber
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CameraFragment : BaseFragment<FragmentCameraBinding>(),
     ImageSegmentationHelper.SegmentationListener {
     override val TAG: String
         get() = CameraFragment::class.java.simpleName
     override val layoutRes: Int
         get() = R.layout.fragment_camera
+
+    private val viewModel by viewModels<DetectViewModel>()
+
+    @Inject
+    lateinit var preferences: CrackerSharedPreferences
 
     private lateinit var imageSegmentationHelper: ImageSegmentationHelper
     private lateinit var bitmapBuffer: Bitmap
@@ -49,6 +60,7 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
     private lateinit var locationManager: LocationManager
     private var locationByGps: Location? = null
     private var locationByNetwork: Location? = null
+    private var currentLocation: Location? = null
     private var loggingJob: Job? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -154,6 +166,7 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
                 networkLocationListener
             )
         }
+        logCurrentLocation()
     }
 
     private fun initOnClickListener() {
@@ -167,13 +180,11 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
                 binding.chronometer.format = "녹화 중: %s"
                 binding.chronometer.base = SystemClock.elapsedRealtime()
                 binding.chronometer.start()
-                logCurrentLocation()
             }
             isRecording = !isRecording
         }
     }
 
-    // Already checked in MainActivity
     @SuppressLint("MissingPermission")
     private fun logCurrentLocation() {
         loggingJob = lifecycleScope.launch {
@@ -184,31 +195,19 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
                         ?.let { locationByGps = it }
                     locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
                         ?.let { locationByNetwork = it }
-                    var currentLocation: Location? = null
                     if (locationByGps != null && locationByNetwork != null) {
                         currentLocation =
-                            if (requireNotNull(locationByGps).accuracy > requireNotNull(
-                                    locationByNetwork
-                                ).accuracy
+                            if (locationByGps!!.accuracy > locationByNetwork!!.accuracy
                             ) {
-                                Timber.tag("currentLocation by").i("locationByGps, both Not Null")
                                 locationByGps
                             } else {
-                                Timber.tag("currentLocation by")
-                                    .i("locationByNetwork, both Not Null")
                                 locationByNetwork
                             }
                     } else if (locationByGps != null) {
-                        Timber.tag("currentLocation by").i("locationByGps")
                         currentLocation = locationByGps
                     } else if (locationByNetwork != null) {
-                        Timber.tag("currentLocation by").i("locationByNetwork")
                         currentLocation = locationByNetwork
                     }
-                    currentLocation?.let {
-                        Timber.tag("currentLocation is")
-                            .i("위도: ${it.latitude}, 경도: ${it.longitude}")
-                    } ?: Timber.tag("currentLocation is").i("null")
                 }
             }
         }
@@ -260,7 +259,6 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
                                 Bitmap.Config.ARGB_8888
                             )
                         }
-
                         segmentImage(image)
                     }
                 }
@@ -285,17 +283,29 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
         results: List<Segmentation>?,
         inferenceTime: Long,
         imageHeight: Int,
-        imageWidth: Int
+        imageWidth: Int,
+        originalImage: String
     ) {
-        requireActivity().runOnUiThread {
+        activity?.runOnUiThread {
             binding.bottomSheetLayout.inferenceTimeVal.text = String.format("%d ms", inferenceTime)
-            binding.overlay.setResults(results, imageHeight, imageWidth)
+            val drawingResult = binding.overlay.setResults(results, imageHeight, imageWidth)
+
+            if (isRecording && drawingResult.pixelRatio >= 1L && drawingResult.predictionImage != "") {
+                viewModel.uploadCrackInfo(
+                    preferences.uuid,
+                    System.currentTimeMillis(),
+                    currentLocation?.longitude.toString(),
+                    currentLocation?.latitude.toString(),
+                    originalImage,
+                    drawingResult.predictionImage
+                )
+            }
             binding.overlay.invalidate()
         }
     }
 
     override fun onError(error: String) {
-        requireActivity().runOnUiThread {
+        activity?.runOnUiThread {
             Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
         }
     }

@@ -1,4 +1,4 @@
-package co.kr.cracker_android.presentation.util
+package co.kr.cracker_android.util
 
 import android.content.Context
 import android.widget.Toast

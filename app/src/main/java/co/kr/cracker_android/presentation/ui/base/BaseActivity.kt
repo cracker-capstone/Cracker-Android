@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import co.kr.cracker_android.presentation.util.CrackerLifecycleObserver
+import co.kr.cracker_android.util.CrackerLifecycleObserver
 
-abstract class BaseActivity<T: ViewDataBinding>: AppCompatActivity() {
+abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
     protected lateinit var binding: T
     abstract val layoutRes: Int
 

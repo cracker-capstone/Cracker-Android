@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
+import co.kr.cracker_android.util.encode
 import org.tensorflow.lite.task.vision.segmenter.Segmentation
 import kotlin.math.max
 
@@ -29,7 +30,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
         segmentResult: List<Segmentation>?,
         imageHeight: Int,
         imageWidth: Int,
-    ) {
+    ): DrawingResult {
         if (segmentResult != null && segmentResult.isNotEmpty()) {
             val colorLabels = segmentResult[0].coloredLabels.mapIndexed { index, coloredLabel ->
                 ColorLabel(
@@ -71,8 +72,12 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
             scaleBitmap = Bitmap.createScaledBitmap(image, scaleWidth, scaleHeight, false)
             listener?.onLabels(colorLabels.filter { it.isExist })
 
-            val pixelRatio = pixels.count { it == -2139095040 } * 100 / pixels.size
+            return DrawingResult(
+                pixels.count { it == -2139095040 }.toLong() * 100L / pixels.size.toLong(),
+                scaleBitmap.encode()
+            )
         }
+        return DrawingResult()
     }
 
     interface OverlayViewListener {
@@ -97,8 +102,12 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
         }
     }
 
+    data class DrawingResult(
+        val pixelRatio: Long = 0,
+        val predictionImage: String = ""
+    )
+
     companion object {
         private const val ALPHA_COLOR = 128
     }
 }
-
