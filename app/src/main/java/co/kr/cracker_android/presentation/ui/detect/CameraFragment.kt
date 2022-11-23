@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.widget.AdapterView
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -70,6 +71,7 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
         postViewFinder()
         initBottomSheetControls()
         initLocationSystem()
+        initZoomSeekBar()
         initOnClickListener()
     }
 
@@ -169,6 +171,23 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
         logCurrentLocation()
     }
 
+    private fun initZoomSeekBar() {
+        binding.zoomSeekbar.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(
+                seekBar: SeekBar?,
+                progress: Int,
+                fromUser: Boolean
+            ) {
+                camera?.cameraControl?.setLinearZoom(0.1F * progress)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+    }
+
     private fun initOnClickListener() {
         binding.btnRecord.setOnClickListener {
             if (isRecording) {
@@ -266,10 +285,15 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
         cameraProvider.unbindAll()
 
         try {
-            camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalyzer)
+            camera = cameraProvider.bindToLifecycle(
+                viewLifecycleOwner,
+                cameraSelector,
+                preview,
+                imageAnalyzer
+            )
             preview?.setSurfaceProvider(binding.viewFinder.surfaceProvider)
-        } catch (exc: Exception) {
-            Timber.tag("Image Segmentation").e(exc, "Use case binding failed")
+        } catch (e: Exception) {
+            Timber.tag("Image Segmentation").e(e, "Use case binding failed")
         }
     }
 
