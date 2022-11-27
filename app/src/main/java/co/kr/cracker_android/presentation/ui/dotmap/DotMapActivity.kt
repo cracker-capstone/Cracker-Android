@@ -59,7 +59,7 @@ class DotMapActivity : BaseActivity<ActivityDotMapBinding>(), OnMapReadyCallback
                         dot.longitude.toDouble()
                     )
                 )
-                googleMap.setOnMarkerClickListener { marker ->
+                googleMap.setOnMarkerClickListener { _ ->
                     supportFragmentManager.commit {
                         replace(
                             R.id.fcv_dot_map,
