@@ -1,6 +1,8 @@
 package co.kr.cracker_android.domain.usecase
 
+import co.kr.cracker_android.domain.entity.Image
 import co.kr.cracker_android.domain.entity.ImageUploadEntity
+import co.kr.cracker_android.domain.entity.Location
 import co.kr.cracker_android.domain.repository.ImageUploadRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,14 +19,14 @@ class ImageUploadUseCase @Inject constructor(
         originalImage: String,
         predictionImage: String
     ): Result<Unit> =
-        runCatching {
-            withContext(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
+            runCatching {
                 imageUploadRepository.uploadImage(
                     ImageUploadEntity(
                         uuid,
                         timeStamp,
-                        ImageUploadEntity.Location(longitude, latitude),
-                        ImageUploadEntity.Image(originalImage, predictionImage)
+                        Location(longitude, latitude),
+                        Image(originalImage, predictionImage)
                     )
                 )
             }

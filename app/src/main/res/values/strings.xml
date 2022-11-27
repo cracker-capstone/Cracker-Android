@@ -5,7 +5,7 @@
     <string name="request_permission">CRACKER 사용을 위해 권한을 모두 허용해주세요.</string>
     <string name="scheme_package">package</string>
     <string name="history">HISTORY</string>
-    <string name="heatmap">HEATMAP</string>
+    <string name="dot_map">DOT MAP</string>
     <string name="histogram">HISTOGRAM</string>
     <string name="cracker">CRACKER</string>
     <string name="background_image">Background Image</string>
@@ -25,7 +25,7 @@
     <string name="tv_default_inference_time">0ms</string>
     <string name="tv_default_threads_value">2</string>
     <string name="btn_record">RECORD</string>
-    <string name="version">v0.7.1</string>
+    <string name="version">v1.0.0</string>
 
     <string-array name="delegate_spinner_titles">
         <item>CPU</item>

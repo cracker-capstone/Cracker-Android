@@ -1,6 +1,7 @@
 package co.kr.cracker_android.presentation.di
 
 import co.kr.cracker_android.BuildConfig
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,4 +41,8 @@ object NetworkModule {
                 }
             )
             .build()
+
+    @Provides
+    @Singleton
+    fun provideGson(): Gson = Gson()
 }

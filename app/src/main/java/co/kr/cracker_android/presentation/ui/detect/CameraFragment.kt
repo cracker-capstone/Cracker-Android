@@ -7,12 +7,14 @@ import android.graphics.Bitmap
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.widget.AdapterView
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
@@ -35,6 +37,7 @@ import org.tensorflow.lite.task.vision.segmenter.Segmentation
 import timber.log.Timber
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.function.Consumer
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -155,7 +158,7 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
         if (isGpsEnabled) {
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
-                1000,
+                500,
                 10f,
                 gpsLocationListener
             )
@@ -163,7 +166,7 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
         if (isNetworkEnabled) {
             locationManager.requestLocationUpdates(
                 LocationManager.NETWORK_PROVIDER,
-                1000,
+                500,
                 10f,
                 networkLocationListener
             )
@@ -210,6 +213,13 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 while (true) {
                     delay(1000)
+
+//                    locationManager.getCurrentLocation(
+//                        LocationManager.GPS_PROVIDER,
+//                        null,
+//                        requireActivity().mainExecutor
+//                    ) { location -> currentLocation = location }
+
                     locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                         ?.let { locationByGps = it }
                     locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
@@ -218,15 +228,27 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
                         currentLocation =
                             if (locationByGps!!.accuracy > locationByNetwork!!.accuracy
                             ) {
+                                Timber.tag("currentLocation").i("get by GPS, both not null")
                                 locationByGps
                             } else {
+                                Timber.tag("currentLocation").i("get by Network, both not null")
                                 locationByNetwork
                             }
                     } else if (locationByGps != null) {
+                        Timber.tag("currentLocation").i("get by GPS")
                         currentLocation = locationByGps
                     } else if (locationByNetwork != null) {
+                        Timber.tag("currentLocation").i("get by Network")
                         currentLocation = locationByNetwork
                     }
+
+//                    Toast.makeText(
+//                        requireContext(),
+//                        "${currentLocation?.latitude}, ${currentLocation?.longitude}",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+                    Timber.tag("currentLocation")
+                        .i("${currentLocation?.latitude}, ${currentLocation?.longitude}")
                 }
             }
         }
@@ -314,7 +336,7 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(),
             binding.bottomSheetLayout.inferenceTimeVal.text = String.format("%d ms", inferenceTime)
             val drawingResult = binding.overlay.setResults(results, imageHeight, imageWidth)
 
-            if (isRecording && drawingResult.pixelRatio >= 1L && drawingResult.predictionImage != "") {
+            if (isRecording && drawingResult.pixelRatio >= 1.5 && drawingResult.predictionImage != "") {
                 viewModel.uploadCrackInfo(
                     preferences.uuid,
                     System.currentTimeMillis(),

@@ -18,4 +18,13 @@
     <style name="BottomSheetSpinnerItemStyle" parent="Widget.AppCompat.Light.DropDownItem.Spinner">
         <item name="android:textSize">@dimen/bottom_sheet_text_size</item>
     </style>
+
+    <style name="Theme.CrackerAndroid.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.CrackerAndroid.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.CrackerAndroid.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
