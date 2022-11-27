@@ -5,7 +5,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface ImageUploadService {
-    @POST("/api/crack-info/upload")
+    @POST("/api/crack-info-store/upload")
     suspend fun uploadCrackInfo(
         @Body body: CrackInfoRequest
     )

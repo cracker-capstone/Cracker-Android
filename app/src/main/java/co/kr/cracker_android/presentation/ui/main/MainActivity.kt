@@ -6,6 +6,7 @@ import co.kr.cracker_android.data.preferences.CrackerSharedPreferences
 import co.kr.cracker_android.databinding.ActivityMainBinding
 import co.kr.cracker_android.presentation.ui.base.BaseActivity
 import co.kr.cracker_android.presentation.ui.detect.DetectActivity
+import co.kr.cracker_android.presentation.ui.dotmap.DotMapActivity
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
@@ -27,6 +28,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun initOnClickListener() {
         binding.btnDetect.setOnClickListener {
             startActivity(DetectActivity.getIntent(this))
+        }
+        binding.btnDotMap.setOnClickListener {
+            startActivity(DotMapActivity.getIntent(this))
         }
     }
 

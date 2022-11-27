@@ -21,9 +21,9 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
 
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
-        scaleBitmap?.let {
-            canvas.drawBitmap(it, 0f, 0f, null)
-        }
+//        scaleBitmap?.let {
+//            canvas.drawBitmap(it, 0f, 0f, null)
+//        }
     }
 
     fun setResults(
@@ -73,7 +73,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
             listener?.onLabels(colorLabels.filter { it.isExist })
 
             return DrawingResult(
-                pixels.count { it == -2139095040 }.toLong() * 100L / pixels.size.toLong(),
+                pixels.count { it == -2139095040 }.toDouble() * 100L / pixels.size.toDouble(),
                 scaleBitmap.encode()
             )
         }
@@ -103,7 +103,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
     }
 
     data class DrawingResult(
-        val pixelRatio: Long = 0,
+        val pixelRatio: Double = 0.0,
         val predictionImage: String = ""
     )
 

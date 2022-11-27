@@ -1,5 +1,6 @@
 package co.kr.cracker_android.presentation.di
 
+import co.kr.cracker_android.data.service.DotsService
 import co.kr.cracker_android.data.service.ImageUploadService
 import dagger.Module
 import dagger.Provides
@@ -15,4 +16,9 @@ object ServiceModule {
     @Singleton
     fun provideImageUploadService(retrofit: Retrofit): ImageUploadService =
         retrofit.create(ImageUploadService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideDotsService(retrofit: Retrofit): DotsService =
+        retrofit.create(DotsService::class.java)
 }
